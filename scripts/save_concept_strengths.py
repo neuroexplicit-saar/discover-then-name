@@ -12,9 +12,9 @@ from dncbm.utils import common_init, get_sae_ckpt
 
 def save_concept_strengths(args, is_cc3m=False):
     if is_cc3m:
-        features_path = os.path.join(args.data_dir_activations["img"], args.probe_split)
+        features_path = os.path.join(args.data_dir_activations["img"], args.probe_split + ".pth")
     else:
-        features_path = os.path.join(args.probe_data_dir_activations["img"], args.probe_split)
+        features_path = os.path.join(args.probe_data_dir_activations["img"], args.probe_split + ".pth")
     all_features = torch.load(features_path)
 
     print(f"Loaded concepts from: {features_path}")
@@ -30,15 +30,15 @@ def save_concept_strengths(args, is_cc3m=False):
     all_concepts = None
 
     with torch.no_grad():
+        all_concepts = torch.empty((len(dataset), n_learned_features))
+        i = 0
         for features in tqdm(loader):
             features = features[0].to(args.device)
-            concepts, reconstructions = autoencoder(features)
-            concepts, reconstructions = concepts.squeeze(), reconstructions.squeeze()
-           
-            if all_concepts is None:
-                all_concepts = concepts.detach().cpu()
-            else:
-                all_concepts = torch.vstack((all_concepts, concepts.detach().cpu()))
+            concepts, _ = autoencoder(features)
+            concepts = concepts.squeeze()
+
+            all_concepts[i:i + features.shape[0]] = concepts
+            i += features.shape[0]
 
     whole_all_concepts_fname = os.path.join(args.probe_cs_save_dir, args.probe_split, "all_concepts.pth")
     os.makedirs(osp.dirname(whole_all_concepts_fname), exist_ok=True)

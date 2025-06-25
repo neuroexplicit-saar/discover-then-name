@@ -133,7 +133,7 @@ class MethodOurs(MethodBase):
             self.probe_config_dict = {'imagenet': "lr0.001_bs512_epo200_nobias_clCE_spL1_spl1.0",
                                       'cifar100': "lr0.01_bs512_epo200_nobias_clCE_spL1_spl1.0",
                                       'cifar10': "lr0.001_bs512_epo200_nobias_clCE_spL1_spl1.0",
-                                      'places365': "lr0.001_bs512_epo200_nobias_clCE_spL1_spl1.0",
+                                      'places365': "lr0.01_bs512_epo200_nobias_clCE_spL1_spl0.1",
                                       'waterbirds100': 'lr0.1_bs512_epo200_nobias_clCE_spL1_spl10.0', }
 
             probe_config_to_use = self.probe_config_dict[self.args.probe_dataset]
@@ -345,7 +345,7 @@ class MethodOurs(MethodBase):
 
             self.all_dic_vec /= self.all_dic_vec.norm(dim=0, keepdim=True)
             similarities = torch.matmul(
-                vocab_specific_embedding, self.all_dic_vec).squeeze(dim=1)
+                vocab_specific_embedding.to(torch.float32), self.all_dic_vec).squeeze(dim=1)
             all_selected_indices = torch.argmax(similarities, dim=0).squeeze()
             all_selected_embeddings = vocab_specific_embedding[all_selected_indices]
             all_texts = self.vocab_txt_all[vocab_idx][all_selected_indices]

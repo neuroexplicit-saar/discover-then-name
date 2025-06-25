@@ -353,13 +353,15 @@ def main(args):
                         commit=True,
                     )
 
+    del train_labels, train_dataset, train_loader
+
     val_loss, val_class_loss, val_sparse_loss, val_acc_top1, val_acc_top5, coverage_energy_wise, zero_count_dict = eval_model(
         model, train_val_loader, num_classes, args.probe_classification_loss, args.probe_sparsity_loss_lambda, args.device, eval_coverage=True)
 
     test_loss, test_class_loss, test_sparse_loss, test_acc_top1, test_acc_top5, test_coverage_energy_wise, _ = eval_model(
         model, test_loader, num_classes, args.probe_classification_loss, args.probe_sparsity_loss_lambda, args.device, eval_coverage=True)
 
-    saving_dict_final = {"model": copy.deepcopy(model.state_dict()), "epoch": e+1, "val_acc_top1": val_acc_top1,
+    saving_dict_final = {"model": model.state_dict(), "epoch": e+1, "val_acc_top1": val_acc_top1,
                          "val_acc_top5": val_acc_top5, "val_loss": val_loss, "val_class_loss": val_class_loss, "val_sparse_loss": val_sparse_loss, "test_acc_top1": test_acc_top1,
                          "test_acc_top5": test_acc_top5, "test_loss": test_loss, "test_class_loss": test_class_loss, "test_sparse_loss": test_sparse_loss, 'train_loss': avg_loss, "train_class_loss": avg_class_loss, "train_sparse_loss": avg_sparse_loss, "val_coverage_energy_wise": coverage_energy_wise, "test_coverage_energy_wise": test_coverage_energy_wise, "zero_count_dict": zero_count_dict}
 

@@ -72,7 +72,7 @@ for fig_idx in range(clusters_to_vis//3):
             with col.select((col.extent[0], col.extent[0]+text_width+bpad, *col.extent[2:])):
                 if not grid_idx:
                     col.set_ylabel("Top Concepts")
-                    specific_texts = cluster_texts[keys_list[grid_idx + 3 * fig_idx]][::-1]
+                specific_texts = cluster_texts[keys_list[grid_idx + 3 * fig_idx]][::-1]
                 for shift, text in enumerate(specific_texts):
                     col.make_text(.5, .1*shift + .25, text, ha="center", fontweight="normal")
 

@@ -57,8 +57,9 @@ class FetchFeatures:
     def save_probe_features(self, probe_dataset):
         "save the train and train_val and val features and labels"
 
-        if not osp.exists(os.path.join(args.probe_split_idxs_dir['img'], "train_idxs.pth")):
-            print(f"\n Labels alreday exist! \n")
+        if osp.exists(os.path.join(args.probe_split_idxs_dir['img'], "train_idxs.pth")):
+            print(f"\n Labels already exist! \n")
+        else:
             self.dump_idxs()
 
         # train split
@@ -88,7 +89,7 @@ class FetchFeatures:
         torch.save(train_labels, os.path.join(
             args.probe_split_idxs_dir['img'], "all_labels_train.pth"))
         torch.save(train_val_labels, os.path.join(
-            args.probe_split_idxs_dir['img'], "all_labels_train.pth"))
+            args.probe_split_idxs_dir['img'], "all_labels_train_val.pth"))
         del output
 
         # val split

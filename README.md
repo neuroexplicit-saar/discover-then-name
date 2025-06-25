@@ -28,7 +28,7 @@ European Conference on Computer Vision (ECCV) 2024
 
 ### Prerequisites
 
-All the dependencies and packages can be installed using pip. The code was tested using Python 3.10.
+All the dependencies and packages can be installed using pip. The code was tested using Python 3.10. A LaTeX distribution is needed to produce the visualisations.
 
 ### Installing the Packages
 
@@ -63,7 +63,7 @@ Note: Number of downloaded paired dataset might be less than we used for our tra
 
 ### Vocabulary for naming concepts
 
-We use the vocabulary of 20k words used by [CLIP-Dissect](https://arxiv.org/abs/2204.10965), from [here](https://github.com/first20hours/google-10000-english/blob/master/20k.txt). Download and place the text file named as `"clipdissect_20k.txt` in `vocab_dir` specified in `config.py`. Then compute normalized CLIP embeddings of each text and save them as `embeddings_<encoder_name>_clipdissect_20k.pth` in `vocab_dir`. For example, for CLIP ResNet-50, the embedding file should be named `embeddings_clip_RN50_clipdissect_20k.pth`.
+We use the vocabulary of 20k words used by [CLIP-Dissect](https://arxiv.org/abs/2204.10965), from [here](https://github.com/first20hours/google-10000-english/blob/master/20k.txt). Download and place the text file named as `"clipdissect_20k.txt` in `vocab_dir` specified in `config.py`. Then compute normalized CLIP embeddings of each text and save them as `embeddings_<encoder_name>_clipdissect_20k.pth` in `vocab_dir`. For example, for CLIP ResNet-50, the embedding file should be named `embeddings_clip_RN50_clipdissect_20k.pth`. You can use the [compute_embeddings.py](compute_embeddings.py) script.
 
 
 ### Datasets for training downstream probes
@@ -77,8 +77,7 @@ These are the datasets on which linear probes are trained on the learnt concept 
     * [CIFAR100](https://pytorch.org/vision/main/generated/torchvision.datasets.CIFAR100.html)
 * Set the paths to the datasets in `config.py`.
 
-
-
+[This script](https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh) may be helpful to prepare ImageNet.
 
 ## Usage
 
@@ -122,6 +121,8 @@ python scripts/save_probe_features.py --img_enc_name clip_RN50  --probe_dataset 
 python scripts/save_concept_strengths.py --lr 5e-4 --l1_coeff 3e-5 --expansion_factor 8 --img_enc_name clip_RN50 --num_epochs 200  --resample_freq 10  --train_sae_bs 4096  --probe_dataset places365 --probe_split train
 ```
 
+(Repeat for `val` and `train_val` splits as well.)
+
 #### Train the probe on the saved concept strengths
 
 ```bash
@@ -150,7 +151,7 @@ python scripts/visualization/vis_meta_clustering_dump.py --img_enc_name clip_RN5
 
 Then, plot the meta clusters: 
 ```bash
-python scripts/visualizations/vis_meta_clustering_plot.py --img_enc_name clip_RN50 --probe_split val --method_name ours  --probe_dataset places365 --sae_dataset cc3m --device cpu
+python scripts/visualization/vis_meta_clustering_plot.py --img_enc_name clip_RN50 --probe_split val --method_name ours  --probe_dataset places365 --sae_dataset cc3m --device cpu
 ```
 
 #### Local Explanation
@@ -170,7 +171,7 @@ First, save the required files for plotting:
 python scripts/visualization/vis_global_explanations_dump.py --sae_dataset cc3m --img_enc_name clip_RN50 --method_name ours --probe_split val   --probe_dataset places365 --which_ckpt final
 ```
 
-Then, plot the global explnataions: 
+Then, plot the global explanations: 
 ```bash
 python scripts/visualization/vis_global_explanations_plot.py --img_enc_name clip_RN50 --method_name ours --probe_split val   --probe_dataset places365 --which_ckpt final --device cpu
 ```

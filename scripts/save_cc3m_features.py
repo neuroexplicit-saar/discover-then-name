@@ -42,7 +42,7 @@ class FetchFeatures:
         return out, idxs
     
     def save_cc3m_features(self):
-        data_dir_tar = osp.join(args.data_dir_root, "CC3M_TAR")
+        data_dir_tar = osp.join(".")
         train_path = "training"
         val_path = 'validation'
 
@@ -71,7 +71,3 @@ if __name__ == '__main__':
 
     fetch_act = FetchFeatures(args)
     fetch_act.save_cc3m_features()
-  
-
-
-    
